@@ -38,7 +38,7 @@ jobs:
           context: .
           file: ./Dockerfile.aws
           platforms: linux/amd64
-          tags: ${{ steps.login-ecr.outputs.registry }}:latest
+          tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
           secrets: |
             "db_host=${{ secrets.DB_AWS_RDS_HOST }}"
             "db_password=${{ secrets.DB_AWS_RDS_PASSWORD }}"
