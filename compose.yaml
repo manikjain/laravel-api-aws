@@ -16,7 +16,7 @@ services:
   api:
     build: 
       context: .
-      dockerfile: Dockerfile.local # modify to Dockerfile.aws to test image for aws
+      dockerfile: Dockerfile.local
     ports:
       - "8000:8000"
     depends_on:
