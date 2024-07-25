@@ -14,11 +14,13 @@ services:
       retries: 5
       timeout: 5s
   api:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.local # modify to Dockerfile.aws to test image for aws
     ports:
       - "8000:8000"
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy # to ensure the DB is ready before the API starts
         restart: true
     # entrypoint: sh -c "sleep 10 && php artisan migrate && php artisan passport:install && php artisan db:seed && php artisan serve --host=0.0.0.0 --port=8000"

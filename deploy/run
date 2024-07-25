@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+# Run laravel artisan commands
+usermod -a -G www-data root
+php /var/www/html/artisan migrate
+php /var/www/html/artisan passport:install
+php /var/www/html/artisan db:seed
+
+# Start app services
+service nginx restart
+/usr/bin/supervisord -n -c /etc/supervisord.conf &
+php-fpm

@@ -1,0 +1,79 @@
+FROM php:8.1-fpm
+
+# Install composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    php composer-setup.php \
+    php -r "unlink('composer-setup.php');"
+
+# Install packages
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    libpng-dev \
+    libzip-dev \
+    libmcrypt-dev \
+    curl \
+    openssl \
+    zip \
+    unzip \
+    git \
+    && docker-php-ext-install -j$(nproc) pdo \
+    && docker-php-ext-install -j$(nproc) mysqli \
+    && docker-php-ext-install -j$(nproc) pdo_mysql \
+    && docker-php-ext-install  bcmath \
+    && docker-php-ext-install  gd \
+    && docker-php-ext-install  zip \
+    && docker-php-ext-install opcache
+
+RUN pecl install -o -f redis \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable redis
+
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
+
+ADD ./deploy/opcache.ini "$PHP_INI_DIR/conf.d/opcache.ini"
+
+RUN apt-get install nano -y; \
+    apt-get install supervisor -y; \
+    apt-get install -y nginx  && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+COPY . /var/www/html
+
+# Composer create project files
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN ./composer.phar create-project joselfonseca/laravel-api new-api; \
+    cp -rp new-api/. ./.; rm -rf new-api
+
+# Replace DB hostname and password in .env file
+RUN --mount=type=secret,id=db_host \
+    sed -i -e "11s/DB_HOST=127\.0\.0\.1/DB_HOST=$(cat /run/secrets/db_host)/g" .env
+RUN --mount=type=secret,id=db_password \
+    sed -i -e "23,27s/^/#/g" -e "s/DB_PASSWORD=/DB_PASSWORD=$(cat /run/secrets/db_password)/g" .env
+
+# Setup Nginx/FPM/Supervisor files
+RUN rm /etc/nginx/sites-enabled/default
+
+COPY ./deploy/nginx.conf /etc/nginx/nginx.conf
+COPY ./deploy/deploy.conf /etc/nginx/conf.d/default.conf
+
+RUN mv /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.backup
+COPY ./deploy/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./deploy/supervisord.conf /etc/supervisord.conf
+
+RUN mkdir ./storage/framework/cache/data
+
+# Set directory/file permissions
+RUN usermod -a -G www-data root; \
+    chgrp -R www-data storage; \
+    chown -R www-data:www-data ./storage; \
+    chmod -R 0777 ./storage; \
+    chmod +x ./deploy/run
+
+# create a Symlink that references  your  error log
+RUN ln -s /app/storage/logs /opt/logs
+
+ENTRYPOINT ["./deploy/run"]
+
+EXPOSE 80

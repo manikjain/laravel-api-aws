@@ -1,0 +1,45 @@
+name: Deploy to App Runner - Image based # Name of the workflow
+on:
+  push:
+    branches: [ develop ] # Trigger workflow on git push to develop branch
+  workflow_dispatch: # Allow manual invocation of the workflow
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          mask-password: 'false'
+
+      - name: Build the app image
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile.aws
+          platforms: linux/amd64
+          tags: ${{ steps.login-ecr.outputs.registry }}:latest
+          secrets: |
+            "db_host=${{ secrets.DB_AWS_RDS_HOST }}"
+            "db_password=${{ secrets.DB_AWS_RDS_PASSWORD }}"
