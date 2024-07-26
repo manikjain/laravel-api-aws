@@ -20,6 +20,8 @@ Table of Contents
 
 For container-based deployments in AWS, while there are more robust and flexible services available like AWS EKS/ECS, for the purposes of this deployment and as the focus is not so much on scalability and redundancy, I chose to use AWS App Runner to run the API with a RDS MySQL instance.
 
+Scalability: App Runner by default can scale up to 25 instances of the API.
+
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
 <img width="777" alt="image" src="https://github.com/user-attachments/assets/6764fe9d-d8a8-4efb-b894-a9727229870e">
@@ -32,6 +34,7 @@ For the purposes of this example deployment, the following things could be impro
 2. RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC.
 3. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
 4. Redis/Memcached were not used (/disabled) with the api to keep the deployment simple.
+5. Redundancy: The setup doesn't use replication. Replication/Fault tolderance/High availability could be setup for RDS and the API (using another service other than App Runner).
 
 ## Folder structure
 
