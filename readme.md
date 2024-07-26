@@ -19,6 +19,9 @@ For container-based deployments in AWS, while there are more robust and flexible
 
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
+![architecture_diagram](https://github.com/user-attachments/assets/469cbe32-3583-4045-b5df-50054ea18fb7)
+
+
 ### Corner cuts and scope for improvement
 
 For the purposes of this example deployment, the following things could be improved about the whole deployment:
@@ -179,6 +182,8 @@ state_dynamo_db = "tf-remote-state-lock"
 ### Action Secrets
 
 Navigate to https://github.com/manikjain/laravel-api-aws/settings/secrets/actions to setup the following secrets. The value of `APPRUNNER_ECR_ROLE_ARN`, `DB_AWS_RDS_HOST`, `ECR_REGISTRY` will be known after the terraform run and can be updated later.
+
+<img width="822" alt="image" src="https://github.com/user-attachments/assets/f0340587-3836-4953-a46d-e81a31f5c5f8">
 
 All the required secrets as mentioned here must be in place for the the github actions to work properly.
 
