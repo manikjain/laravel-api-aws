@@ -14,3 +14,9 @@ Homestead.json
 .DS_Store
 .phpunit.result.cache
 docker/mysql/
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
