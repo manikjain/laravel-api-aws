@@ -1,4 +1,4 @@
-name: Destroy Infrastructure in AWS
+name: Destroy Infrastructure in AWS (not recommended in production)
 on:
   workflow_dispatch: # Allow manual invocation of the workflow
 

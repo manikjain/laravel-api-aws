@@ -160,6 +160,7 @@ state_dynamo_db = "tf-remote-state-lock"
 ```
 
 5. Grab the output values from step 4 as per what you received, we will need these to create a remote backend in the deployment steps.
+6. *Do not remove* the local terraform state file from your system, we will need it later to destroy these resources.
 
 ### Action Secrets
 
@@ -243,4 +244,15 @@ mysql> select * from users;
 2 rows in set (0,03 sec)
 
 mysql>
+```
+
+### Destroy
+
+1. [Not recommended in production] For ease of destroying the terraform resources, `Destroy Infrastructure in AWS (not recommended in production)` github action was created.
+2. Run the github action to destroy all the resources created.
+3. Additionally, on your local system run the following to destroy the remote backend.
+
+```
+cd terraform/remote-state
+terraform destroy
 ```
