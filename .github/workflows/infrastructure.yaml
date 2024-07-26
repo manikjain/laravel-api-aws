@@ -40,6 +40,9 @@ jobs:
         run: |
           cd terraform
           terraform plan
+        env:
+          TF_VAR_db_username: ${{ secrets.DB_AWS_RDS_USERNAME }}
+          TF_VAR_db_password: ${{ secrets.DB_AWS_RDS_PASSWORD }}
   
   deploy:
     name: Terraform Deploy

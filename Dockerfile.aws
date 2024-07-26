@@ -42,9 +42,11 @@ COPY . /var/www/html
 RUN composer create-project joselfonseca/laravel-api new-api; \
     cp -rp new-api/. ./.; rm -rf new-api
 
-# Replace DB hostname and password in .env file
+# Replace DB username, hostname and password in .env file
 RUN --mount=type=secret,id=db_host \
     sed -i -e "11s/DB_HOST=127\.0\.0\.1/DB_HOST=$(cat /run/secrets/db_host)/g" .env
+RUN --mount=type=secret,id=db_username \
+    sed -i -e "s/DB_USERNAME=root/DB_USERNAME=$(cat /run/secrets/db_username)/g" .env
 RUN --mount=type=secret,id=db_password \
     sed -i -e "23,27s/^/#/g" -e "s/DB_PASSWORD=/DB_PASSWORD=$(cat /run/secrets/db_password)/g" .env
 

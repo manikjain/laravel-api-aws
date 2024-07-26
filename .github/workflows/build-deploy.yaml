@@ -41,4 +41,5 @@ jobs:
           tags: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
           secrets: |
             "db_host=${{ secrets.DB_AWS_RDS_HOST }}"
+            "db_username"=${{ secrets.DB_AWS_RDS_USERNAME }}
             "db_password=${{ secrets.DB_AWS_RDS_PASSWORD }}"
