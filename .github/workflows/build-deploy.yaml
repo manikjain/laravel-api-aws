@@ -32,6 +32,7 @@ jobs:
           registry: ${{ secrets.ECR_REGISTRY }}
 
       - name: Build the app image
+        id: build-image
         uses: docker/build-push-action@v4
         with:
           push: true
@@ -43,3 +44,19 @@ jobs:
             "db_host=${{ secrets.DB_AWS_RDS_HOST }}"
             "db_username"=${{ secrets.DB_AWS_RDS_USERNAME }}
             "db_password=${{ secrets.DB_AWS_RDS_PASSWORD }}"
+
+      - name: Deploy to App Runner Image
+        id: deploy-apprunner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: laravel-api
+          image: ${{ steps.build-image.outputs.imageid }}
+          access-role-arn: ${{ secrets.APPRUNNER_ECR_ROLE_ARN }}
+          region: ${{ secrets.AWS_REGION }}
+          port: 80
+          cpu : 1
+          memory : 2
+          wait-for-service-stability-seconds: 1200
+      
+      - name: App Runner URL
+        run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}" 
