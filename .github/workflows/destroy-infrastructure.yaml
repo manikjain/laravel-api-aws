@@ -35,12 +35,13 @@ jobs:
           pip install awscli
       - run: |
           aws --version
-          export apprunner_arn=$(aws apprunner list-services --region eu-central-1 --query 'ServiceSummaryList[0].ServiceArn'  | sed 's![^api]*$!!' | sed 's!"!!')
-          aws apprunner delete-service --service-arn ${apprunner_arn} --region eu-central-1 --no-paginate 2>&1 > /dev/null
+          export apprunner_arn=$(aws apprunner list-services --region ${AWS_REGION} --query 'ServiceSummaryList[0].ServiceArn'  | sed 's![^api]*$!!' | sed 's!"!!')
+          aws apprunner delete-service --service-arn ${apprunner_arn} --region ${AWS_REGION}
           sleep 20
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - uses: hashicorp/setup-terraform@v3
         with:
