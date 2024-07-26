@@ -8,12 +8,12 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-central-1"
+  region = var.region_a
 }
 
 provider "aws" {
   alias  = "replica"
-  region = "eu-west-3"
+  region = var.region_b
 }
 
 module "remote_state" {

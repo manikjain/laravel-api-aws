@@ -34,7 +34,7 @@ jobs:
         run: |
           cd terraform
           terraform fmt
-          terraform init
+          terraform init -backend-config=backend.tfvars
   
       - name: Terraform Plan
         run: |
@@ -72,7 +72,7 @@ jobs:
         run: |
           cd terraform
           terraform fmt
-          terraform init -upgrade
+          terraform init -upgrade -backend-config=backend.tfvars
 
       - name: Terraform Apply
         run: |
