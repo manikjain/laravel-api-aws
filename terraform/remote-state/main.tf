@@ -19,6 +19,8 @@ provider "aws" {
 module "remote_state" {
   source = "nozaq/remote-state-s3-backend/aws"
   enable_replication = false
+  dynamodb_deletion_protection_enabled = false
+  s3_bucket_force_destroy = true
 
   providers = {
     aws         = aws
