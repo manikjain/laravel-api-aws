@@ -68,5 +68,5 @@ encrypt =  true
 kms_key_id =  "xxxxxxx-xxxxxx-xxxx-xxxx" # Key from previous setup
 dynamodb_table =  "tf-remote-state-lock"
 ```
-3. Run the github-action `Setup infrastructure in AWS`.
-4. Infrastructure
+2. Run the github-action `Setup infrastructure in AWS`.
+3. Infrastructure should now be setup.
