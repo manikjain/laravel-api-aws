@@ -22,6 +22,8 @@ Table of Contents
 
 For container-based deployments in AWS, while there are more robust and flexible services available like AWS EKS/ECS, for the purposes of this deployment and as the focus is not so much on scalability and redundancy, I chose to use AWS App Runner to run the API with a RDS MySQL instance.
 
+Deployment Limitations (due to underlying PHP code): The continuous deployment only works fine the first time. All subsequent times, the container run fails as `php artisan migrate` runs again and fails (DB tables and entries already exist), and the PHP code doesn't seem equiped to handle this failure or to skip the migration (as the DB migration has already taken place the first time).
+
 Scalability: App Runner by default can scale up to 25 instances of the API.
 
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
