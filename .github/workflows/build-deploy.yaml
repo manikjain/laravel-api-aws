@@ -9,7 +9,7 @@ defaults:
     working-directory: ./
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     
     steps:      
