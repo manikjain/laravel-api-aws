@@ -6,8 +6,12 @@ This project demonstrates container image based continuous deployment of a sampl
 Table of Contents
 =================
 * [Architecture](#architecture)
+* [Prerequisites](#prerequisites)
+* [Local deployment and testing](#local-deployment-and-testing)
 * [Setup](#setup)
   * [Remote state and TF session management (optional)](#remote-state-and-tf-session-management-optional)
+  * [Action Secrets](#action-secrets)
+  * [Deployment](#deployment)
 
 ## Architecture
 
@@ -17,7 +21,7 @@ Table of Contents
 1. aws-cli (> `2.17.17` or higher).
 1. AWS security credentials - ACCESS_KEY and SECRET_ACCESS_KEY stored in a file such as `~/.aws/credentials`. Refer the following guide to learn how to store your AWS creds: [https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
 
-## Local setup deployment and testing
+## Local deployment and testing
 
 1. Clone the repository locally. In the root directory of the project, run `docker compose up --build --force-recreate`.
 

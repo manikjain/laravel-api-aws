@@ -3,7 +3,7 @@ output "APPRUNNER_ECR_ROLE_ARN" {
   description = "ARN of the App Runner ECR role"
 }
 
-output "DB_ADDRESS" {
+output "DB_AWS_RDS_HOST" {
     value = aws_db_instance.laravel.address
 }
 
