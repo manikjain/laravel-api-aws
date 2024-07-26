@@ -15,6 +15,20 @@ Table of Contents
 
 ## Architecture
 
+For container-based deployments in AWS, while there are more robust and flexible services available like AWS EKS/ECS, for the purposes of this deployment and as the focus is not so much on scalability and redundancy, I chose to use AWS App Runner to run the API with a RDS MySQL instance.
+
+As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
+
+### Corner cuts and scope for improvement
+
+For the purposes of this example deployment, the following things could be improved about the whole deployment:
+
+1. The Docker image runs with a root user. Docker images should be configured with a non-root user for security reasons.
+2. RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC.
+3. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
+4. Redis/Memcached were not used (/disabled) with the api to keep the deployment simple.
+
+
 ## Prerequisites:
 1. Docker desktop
 1. Terraform (> `v1.9.3` or higher) must be installed on your machine.
