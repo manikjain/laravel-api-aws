@@ -8,6 +8,7 @@ defaults:
 
 jobs:
   plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     
     steps:      
@@ -31,6 +32,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
+          cd terraform
           terraform fmt
           terraform init
   
@@ -63,6 +65,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
+          cd terraform
           terraform fmt
           terraform init -upgrade
 
