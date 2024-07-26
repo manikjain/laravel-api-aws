@@ -36,8 +36,10 @@ jobs:
           terraform fmt
           terraform init
   
-      - name: Terraform Apply
-        run: terraform plan
+      - name: Terraform Plan
+        run: |
+          cd terraform
+          terraform plan
   
   deploy:
     name: Terraform Deploy
@@ -70,4 +72,6 @@ jobs:
           terraform init -upgrade
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          cd terraform
+          terraform apply -auto-approve
