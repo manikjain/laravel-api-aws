@@ -7,10 +7,11 @@ Table of Contents
 =================
 * [Architecture](#architecture)
   * [Corner cuts and scope for improvement](#corner-cuts-and-scope-for-improvement)
+* [Folder Structure](#folder-structure)
 * [Prerequisites](#prerequisites)
 * [Local deployment and testing](#local-deployment-and-testing)
 * [Setup](#setup)
-  * [Remote state and TF session management (optional)](#remote-state-and-tf-session-management-optional)
+  * [Remote state and TF session management](#remote-state-and-tf-session-management)
   * [Action Secrets](#action-secrets)
   * [Deployment](#deployment)
   * [Destroy](#destroy)
@@ -31,6 +32,24 @@ For the purposes of this example deployment, the following things could be impro
 2. RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC.
 3. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
 4. Redis/Memcached were not used (/disabled) with the api to keep the deployment simple.
+
+## Folder structure
+
+    .
+    ├── .github (dir)                  # Github workflows/actions
+    |   ├── build-deploy.yaml          # Action for build and deploy docker image
+    |   ├── destroy-infrastructure.yaml# Terraform for destroying infrastructure
+    |   └── setup-infrastructure.yaml  # Terraform for setting up infrastructure
+    ├── deploy (dir)                   # Deploy configuration for docker image
+    |   ├── *.conf, *.ini              # Configuration files
+    |   └── run                        # Shell script (docker entrypoint)
+    ├── terraform (dir)                # Lambda functions/handlers
+    |   ├── remote-state (dir)         # Terraform files for setting up remote state artifacts in S3 and dynamodb
+    |   └── *.tf                       # Terraform files for setting up infrastructure
+    ├── testdeploy.txt                 # To trigger build and deploy action to AWS ECR and App Runner respectively
+    ├── Dockerfile.local               # Dockerfile for local development
+    ├── Dockerfile.aws                 # Dockerfile for AWS
+    └── README.md
 
 ## Prerequisites:
 1. Docker desktop
