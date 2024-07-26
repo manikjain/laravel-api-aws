@@ -50,7 +50,7 @@ jobs:
         uses: awslabs/amazon-app-runner-deploy@main
         with:
           service: laravel-api
-          image: ${{ steps.build-image.outputs.imageid }}
+          image: ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
           access-role-arn: ${{ secrets.APPRUNNER_ECR_ROLE_ARN }}
           region: ${{ secrets.AWS_REGION }}
           port: 80
