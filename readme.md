@@ -26,7 +26,7 @@ Scalability: App Runner by default can scale up to 25 instances of the API.
 
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
-<img width="777" alt="image" src="https://github.com/user-attachments/assets/6764fe9d-d8a8-4efb-b894-a9727229870e">
+<img width="759" alt="image" src="https://github.com/user-attachments/assets/b9c07fd2-f9f3-46ba-91f7-edd5b581cb10">
 
 ### Corner cuts and scope for improvement
 
