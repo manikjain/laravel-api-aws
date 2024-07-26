@@ -39,7 +39,7 @@ For the purposes of this example deployment, the following things could be impro
 ## Folder structure
 
     .
-    ├── .github (dir)                  # Github workflows/actions
+    ├── .github/workflows (dir)        # Github workflows/actions
     |   ├── build-deploy.yaml          # Action for build and deploy docker image
     |   ├── destroy-infrastructure.yaml# Terraform for destroying infrastructure
     |   └── setup-infrastructure.yaml  # Terraform for setting up infrastructure
