@@ -87,11 +87,45 @@ api-1  |   2024-07-26 18:30:10 .................................................
 --header 'Content-Type: application/json' \
 --data-raw '{
     "name": "Manik",
-    "email": "manik.jain@live.in",
+    "email": "manik.jain@example.in",
     "password": "password",
     "password_confirmation": "password"
 }'
-{"data":{"id":"5093ab4f-1871-4e27-b6b1-8d907dcad788","name":"Manik","email":"manik.jain@live.in","created_at":"2024-07-26T18:30:10+00:00","updated_at":"2024-07-26T18:30:10+00:00","roles":{"data":[{"id":"9b05d8dc-99c0-4919-ac4c-9e5cae9d0194","name":"User","created_at":"2024-07-26T18:28:44+00:00","updated_at":"2024-07-26T18:28:44+00:00","permissions":{"data":[]}}]}}}%
+{"data":{"id":"5093ab4f-1871-4e27-b6b1-8d907dcad788","name":"Manik","email":"manik.jain@example.in","created_at":"2024-07-26T18:30:10+00:00","updated_at":"2024-07-26T18:30:10+00:00","roles":{"data":[{"id":"9b05d8dc-99c0-4919-ac4c-9e5cae9d0194","name":"User","created_at":"2024-07-26T18:28:44+00:00","updated_at":"2024-07-26T18:28:44+00:00","permissions":{"data":[]}}]}}}%
+```
+
+3. Check the local MySQL DB table for changes:
+
+```
+% mysql -h 127.0.0.1 -P 3306 -u root -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 26
+Server version: 9.0.1 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use laravel;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select * from users;
++----+--------------+--------------------------------------+--------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+| id | name         | uuid                                 | email              | email_verified_at   | password                                                     | remember_token | created_at          | updated_at          | deleted_at |
++----+--------------+--------------------------------------+--------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+|  1 | Jose Fonseca | cd687540-fe23-3e5f-8eab-3e8aef2b7757 | jose@example.com   | 2024-07-26 18:28:44 | $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi | ShybqM0vwc     | 2024-07-26 18:28:44 | 2024-07-26 18:28:44 | NULL       |
+|  2 | Manik        | 5093ab4f-1871-4e27-b6b1-8d907dcad788 | manik.jain@example.in | NULL                | $2y$10$bHIWyjB4oaILei6RI4HgwepA/o6gphnYewJjJ3.NHm9MJOrWBrc3m | NULL           | 2024-07-26 18:30:10 | 2024-07-26 18:30:10 | NULL       |
++----+--------------+--------------------------------------+--------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+2 rows in set (0.01 sec)
+
+mysql>
 ```
 
 ## Setup
@@ -147,7 +181,7 @@ kms_key_id =  "xxxxxxx-xxxxxx-xxxx-xxxx" # Key from previous setup
 dynamodb_table =  "tf-remote-state-lock"
 ```
 2. Run the github-action `Setup infrastructure in AWS`.
-3. Infrastructure should now be setup. You should see the following output. Grab the variable value, and update the remaining github actions secrets as indicated earlier. If some part of the values appear to be masked, initialise terraform locally on your system and run `terraform output`.
+3. Infrastructure should now be setup. You should see the following output. Grab the variable values, and update the remaining github actions secrets as indicated earlier. If some part of the values appear to be masked, initialise terraform locally on your system and run `terraform output`.
 
 ```
 Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
@@ -157,4 +191,52 @@ Outputs:
 APPRUNNER_ECR_ROLE_ARN = "arn:aws:iam::**********:role/AppRunnerECRAccessRoleNew"
 DB_ADDRESS = "terraform-20240726182320845700000001.cdqgsg06ue6l.***.rds.amazonaws.com"
 ECR_REGISTRY_URL = "************.dkr.ecr.***.amazonaws.com/laravelapi"
+```
+4. Update `testdeploy.txt` and commit the changes to trigger apprunner deploy via `Deploy to App Runner - Image based` github action.
+5. Grab the App Runner URL from the job log or find it in AWS.
+6. Run the following curl command against the URL to test:
+
+```
+% curl --location 'https://cgrjijz6rb.eu-central-1.awsapprunner.com/api/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Manik",
+    "email": "manik.jain@example.in",
+    "password": "password",
+    "password_confirmation": "password"
+}'
+{"data":{"id":"ad670d93-da46-4533-a085-2787ee10cad5","name":"Manik","email":"manik.jain@example.in","created_at":"2024-07-26T19:00:07+00:00","updated_at":"2024-07-26T19:00:07+00:00","roles":{"data":[{"id":"b83c9977-e35f-4c4a-973f-0382c0b3cef1","name":"User","created_at":"2024-07-26T18:52:39+00:00","updated_at":"2024-07-26T18:52:39+00:00","permissions":{"data":[]}}]}}}%
+```
+7. Check the RDS DB table for changes:
+
+```
+% mysql -h terraform-20240726182320845700000001.*********.eu-central-1.rds.amazonaws.com -P 3306 -u root -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 37
+Server version: 8.0.35 Source distribution
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use laravel;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select * from users;
++----+--------------+--------------------------------------+-----------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+| id | name         | uuid                                 | email                 | email_verified_at   | password                                                     | remember_token | created_at          | updated_at          | deleted_at |
++----+--------------+--------------------------------------+-----------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+|  1 | Jose Fonseca | f0b26021-f8e9-3a43-ab68-67869f161f67 | jose@example.com      | 2024-07-26 18:52:39 | $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi | 00OGrEDHkQ     | 2024-07-26 18:52:39 | 2024-07-26 18:52:39 | NULL       |
+|  2 | Manik        | ad670d93-da46-4533-a085-2787ee10cad5 | manik.jain@example.in | NULL                | $2y$10$iD7wwF/HzarrNFHFfccEiuHX1vuFb0KGxbyamY1.rcI1sviRx5peG | NULL           | 2024-07-26 19:00:07 | 2024-07-26 19:00:07 | NULL       |
++----+--------------+--------------------------------------+-----------------------+---------------------+--------------------------------------------------------------+----------------+---------------------+---------------------+------------+
+2 rows in set (0,03 sec)
+
+mysql>
 ```
