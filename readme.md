@@ -147,4 +147,14 @@ kms_key_id =  "xxxxxxx-xxxxxx-xxxx-xxxx" # Key from previous setup
 dynamodb_table =  "tf-remote-state-lock"
 ```
 2. Run the github-action `Setup infrastructure in AWS`.
-3. Infrastructure should now be setup.
+3. Infrastructure should now be setup. You should see the following output. Grab the variable value, and update the remaining github actions secrets as indicated earlier. If some part of the values appear to be masked, initialise terraform locally on your system and run `terraform output`.
+
+```
+Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+APPRUNNER_ECR_ROLE_ARN = "arn:aws:iam::**********:role/AppRunnerECRAccessRoleNew"
+DB_ADDRESS = "terraform-20240726182320845700000001.cdqgsg06ue6l.***.rds.amazonaws.com"
+ECR_REGISTRY_URL = "************.dkr.ecr.***.amazonaws.com/laravelapi"
+```
