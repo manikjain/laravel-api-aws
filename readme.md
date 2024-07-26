@@ -19,7 +19,7 @@ For container-based deployments in AWS, while there are more robust and flexible
 
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
-<img width="822" alt="architecture_diagram" src="https://github.com/user-attachments/assets/469cbe32-3583-4045-b5df-50054ea18fb7">
+<img width="779" alt="image" src="https://github.com/user-attachments/assets/3606f4d1-0c7c-4f7d-b45b-4145db1af1ea">
 
 ### Corner cuts and scope for improvement
 
