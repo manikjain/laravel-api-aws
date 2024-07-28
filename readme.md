@@ -36,7 +36,10 @@ For the purposes of this example deployment, the following things could be impro
 
 1. **Non-root docker image**: The Docker image runs with a root user. Docker images should be configured with a non-root user for security reasons.
 2. **RDS Publicly exposed**: RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
-![image](https://github.com/user-attachments/assets/d6941420-a06a-4972-ba7c-ab0f232e2791)
+
+   **Desirable setup for production:**
+
+   ![image](https://github.com/user-attachments/assets/d6941420-a06a-4972-ba7c-ab0f232e2791)
 3. Redis/Memcached were not used (/disabled) with the api to keep the deployment simple.
 4. **Redundancy**: The setup doesn't use replication. Replication/Fault tolderance/High availability could be setup for RDS and the API (using another service other than App Runner).
 
