@@ -24,7 +24,7 @@ For container-based deployments in AWS, while there are more robust and flexible
 
 **Continuous Deployment Limitations (due to underlying PHP code)**: The continuous deployment only works fine the first time. All subsequent times, the container run fails as `php artisan migrate` runs again and fails (DB tables and entries already exist), and the PHP code doesn't seem equiped to handle this failure or to skip the migration (as the DB migration has already taken place the first time).
 
-**Scalability**: App Runner by default can scale up to 25 instances of the API.
+**Scalability**: App Runner by default can scale up to 25 instances of the API with each instance capable of handling 100 requests per second.
 
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
