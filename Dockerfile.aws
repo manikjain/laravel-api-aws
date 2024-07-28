@@ -72,6 +72,8 @@ RUN usermod -a -G www-data root; \
 # create a Symlink that references  your  error log
 RUN ln -s /app/storage/logs /opt/logs
 
+USER www-data
+
 ENTRYPOINT ["./deploy/run"]
 
 EXPOSE 80

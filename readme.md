@@ -1,4 +1,3 @@
-
 # Laravel API in AWS
 
 (Built on top of the sample laravel API code in https://github.com/joselfonseca/laravel-api)
