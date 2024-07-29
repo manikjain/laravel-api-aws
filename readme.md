@@ -25,6 +25,8 @@ For container-based deployments in AWS, while there are more robust and flexible
 
 **Scalability**: App Runner by default can scale up to 25 instances of the API with each instance capable of handling 100 requests per second.
 
+**Security**: All sensitive variables (username, password, DB FQDN, AWS/ECR access vars, AppRunner IAM role) are stored and handled using Github Action secrets, and not exposed in the code.
+
 As the API grows in terms of the number of microservices, it would make more sense to move to a better container orchestrator platform such as AWS EKS/ECS.
 
 <img width="759" alt="image" src="https://github.com/user-attachments/assets/b9c07fd2-f9f3-46ba-91f7-edd5b581cb10">
