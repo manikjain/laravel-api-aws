@@ -21,7 +21,7 @@ Table of Contents
 
 For container-based deployments in AWS, while there are more robust and flexible services available like AWS EKS/ECS, for the purposes of this deployment and as the focus is not so much on scalability and redundancy, I chose to use AWS App Runner to run the API with a RDS MySQL instance.
 
-**Continuous Deployment Limitations (due to underlying PHP code)**: The continuous deployment only works fine the first time. All subsequent times, the container run fails as `php artisan migrate` runs again and fails (DB tables and entries already exist), and the PHP code doesn't seem equiped to handle this failure or to skip the migration (as the DB migration has already taken place the first time).
+**Continuous Deployment Limitations (due to underlying PHP code)**: The continuous deployment only works fine the first time. All subsequent times, the container run fails as `php artisan migrate` runs again and errors out (DB tables and entries already exist), and the PHP code doesn't seem equiped to handle this failure or to skip the migration (as the DB migration has already taken place the first time).
 
 **Scalability**: App Runner by default can scale up to 25 instances of the API with each instance capable of handling 100 requests per second.
 
@@ -58,6 +58,9 @@ For the purposes of this example deployment, the following things could be impro
     ├── testdeploy.txt                 # To trigger build and deploy action to AWS ECR and App Runner respectively
     ├── Dockerfile.local               # Dockerfile for local development
     ├── Dockerfile.aws                 # Dockerfile for AWS
+    ...
+    (application code files and directories)
+    ...
     └── README.md
 
 ## Prerequisites:
