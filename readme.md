@@ -34,13 +34,15 @@ As the API grows in terms of the number of microservices, it would make more sen
 For the purposes of this example deployment, the following things could be improved about the whole deployment:
 
 1. **Non-root docker image**: The Docker image runs with a root user. Docker images should be configured with a non-root user for security reasons.
-2. **RDS Publicly exposed**: RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
+2. **RDS Publicly exposed**: RDS DB is accessible over a public endpoint. This was done to make it easier to connect to the MySQL instance from my local machine. Ideally, the RDS DB must exist in a private subnet in a non-default VPC and made accessible via a jumphost in the same VPC. App Runner connects to the RDS DB via public internet. Once RDS is made private in a VPC, App Runner could be configured to privately connect to the RDS instance via VPC connectors.
 
    **Desirable setup for production:**
 
    ![image](https://github.com/user-attachments/assets/d6941420-a06a-4972-ba7c-ab0f232e2791)
 3. Redis/Memcached were not used (/disabled) with the api to keep the deployment simple.
 4. **Redundancy**: The setup doesn't use replication. Replication/Fault tolderance/High availability could be setup for RDS and the API (using another service other than App Runner).
+5. **Custom domain**: A custom domain could be used to access the application endpoint provided by App Runner.
+6. **Caching**: Docker image build could be cached as part of the github action workflow using different mechanisms to ensure faster build time.
 
 ## Folder structure
 
@@ -132,7 +134,7 @@ api-1  |   2024-07-26 18:30:10 .................................................
 
 ```
 
-2. Test with the following `curl` command:
+2. Test with the following `curl` command. We will use the `/api/register` path for testing.
 
 ```
 % curl --location 'http://127.0.0.1:8000/api/register' \
@@ -249,7 +251,7 @@ ECR_REGISTRY_URL = "************.dkr.ecr.***.amazonaws.com/laravelapi"
 ```
 4. Update `testdeploy.txt` and commit the changes to trigger apprunner deploy via `Deploy to App Runner - Image based` github action.
 5. Grab the App Runner URL from the job log or find it in AWS.
-6. Run the following curl command against the URL to test:
+6. Run the following curl command against the URL to test. We will use the `/api/register` path for testing.
 
 ```
 % curl --location 'https://cgrjijz6rb.eu-central-1.awsapprunner.com/api/register' \
@@ -300,7 +302,7 @@ mysql>
 
 1. [Not recommended in production] For ease of destroying the terraform resources, `Destroy Infrastructure in AWS (not recommended in production)` github action was created.
 2. Run the github action to destroy all the resources created.
-3. Additionally, on your local system run the following to destroy the remote backend.
+3. Additionally, on your local system run the following to destroy the remote state backend.
 
 ```
 cd terraform/remote-state
